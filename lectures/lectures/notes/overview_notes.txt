@@ -1,0 +1,21 @@
+But du challenge est de prédire une liste d'espèces sachant une localisation sur une carte.
+
+On possède une grande base de données d'espèces pour entrainer nos modèles, et chaque occurence est accompagné d'une image caractérisant l'environnement.
+Cependant il n'est pas possible d'apprendre la distribution des espèces directement des informations de localisation à cause du peu d'occurrences que l'on a et du biais d'échantillonnage.
+
+Ce qui est fait en écologie c'est de partir de la base d'une représentation d'un environnement. Typiquement un vecteur composé de ( température moyenne, précipitation ect ) ainsi que d'autres variables comme le type de sol, la couverture terrestre, la distance de l'eau. 
+L'originalité de geoLifeClef est d'utiliser des images pour représenter directement ces variables environnementales. 
+
+Ces images sont un modèle en k dimensions, chaque patch représentant une valeur de variable de l'environnement ( température moyenne annuelle, max température du mois le plus chaud , précipitations annuel, l'altitude , la proximité à de l'eau fraiche ainsi que la capacité d'eau disponible. 
+
+On se ramène à un problème de machine learning de "multi channel image classification task". 
+Chaque image représente une channel d'une variable d'environnement dans un carré centré dans la localisation. 
+
+
+DATASET:
+Fichier .csv
+Chaque participants obtient des données d'apprentissages et de test des occurrences des espèces géolocalisées de variables ponctuelles d'environnement. 
+Les participants ont reçu une séries d'apprentissage et une série de test d'occurrences géolocalisées d'espèces. Les deux étaient d'abord composés d'un fichier.csv contenant les coordonnées spatiales des occurrences, les valeurs ponctuelles des variables environnementales à l'endroit de l'occurrence et, pour le tableau de l'apprentissage, le nom de l'espèce et son identificateur. Deuxièmement, chaque ligne du tableau (train et test) renvoie à une image à 33 canaux contenant le tenseur environnemental extrait à cet endroit.
+
+
+Les occurrences ont été extraites
