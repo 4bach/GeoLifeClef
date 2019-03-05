@@ -3,7 +3,12 @@
 .DS_Store
 .DS_Store?
 _*
-
+*.log
+*.aux
+*.synctex.gz
+*.pyc
 #Jeux de données
 
 data
+*tableau_numpy_examplecsv
+GLC2018_Team

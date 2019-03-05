@@ -1,6 +1,6 @@
 from environmental_raster_glc import PatchExtractor
 
-extractor = PatchExtractor('/data/rasters_GLC19', size=64, verbose=True)
+extractor = PatchExtractor('/Users/ykarmim/Documents/Cours/Master/Projet_DAC/geoLifeClef/data/rasters_GLC19', size=64, verbose=True)
 
 extractor.append('chbio_1')
 

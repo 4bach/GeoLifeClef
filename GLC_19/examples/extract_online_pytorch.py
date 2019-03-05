@@ -19,11 +19,11 @@ class GeoLifeClefDataset(Dataset):
 
 
 if __name__ == '__main__':
-    patch_extractor = PatchExtractor('/data/rasters_GLC19', size=64, verbose=True)
+    patch_extractor = PatchExtractor('/Users/ykarmim/Documents/Cours/Master/Projet_DAC/geoLifeClef/data/rasters_GLC19', size=64, verbose=True)
 
-    patch_extractor.append('chbio_1')
-    patch_extractor.append('text')
-    # patch_extractor.add_all()
+    #patch_extractor.append('proxi_eau_fast')
+    #patch_extractor.append('text')
+    patch_extractor.add_all()
 
     # example of dataset
     dataset_list = [(43.61, 3.88), (42.61, 4.88), (46.15, -1.1), (49.54, -1.7)]
