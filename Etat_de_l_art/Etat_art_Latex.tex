@@ -148,8 +148,29 @@ $\overrightarrow{V}_{m} = $ $m$ -ième vecteur de l'occurrence de test \\
 $\overrightarrow{V}_{nm} = \overrightarrow{V}_{n} - \overrightarrow{V}_{m} $\\
 $ D_{nm} = || \overrightarrow{V}_{nm} ||_{2}$\\
 À chaque occurence de l’ensemble d’apprentissage. Les distances $D$ sont triés par ordre croissant de distance. Les 100 plus proches classes distinctes sont retournées, en ne conservant que la plus proche occurence d’une espèce quand celle-ci apparaît plusieurs fois.\\
+Ce modèle peut s'apparenter à un k plus proches voisins.
 Le MRR de ce modèle est 0.0271.
 
+\subsection{Modèle de groupe.}
+Il est probable que plus d’une espèce apparaissent à un même endroit. Partant de cette idée, ST a proposé un modèle utilisant un groupement d’espèces similaires.\\Pour trouver des similarités, on calcule pour chaque espèce, un vecteur représentatif : à partir des les occurrences de l’espèce dans l’ensemble d’apprentissage, ils ont calculé les valeurs moyennes des 33 variables (sur les 64x64 pixels).\\
+Ensuite ils on calculé la distance entre ces vecteurs (comme pour le modèle vectoriel) ce qui donne une matrice de taille $3336x3336$ dans laquelle la distance entre chaque espèce est stockée. En ignorant les espèces qui ont moins de $o$ occurrences.\\
+Le paramètre $t$ est un seuil indiquant la distance maximum pour que deux espèces appartiennent au même groupe.\\
+Cela n’est pas suffisant pour apporter de la similarité :\\\\
+\begin{figure}[H]
+	\center
+	\includegraphics[width=9cm]{figure/figure8.png} 
+	 \caption{Chaque point représente une espèce et les arêtes sont les distances entre les espèces à une distance maximale $t$.Le problème est que parfois entre des espèces du même groupe il peut y avoir une distance de $3t$ ce qui n'est plus très proche. }
+\end{figure}
+Ils ont donc introduit un paramètre $min\_edges$ qui donne le nombre de voisins dans un rayon de taille maximal $t$. Cela donne moins de groupe mais il y a une meilleure similarité.\\
+\begin{figure}[H]
+	\center
+	\includegraphics[width=9cm]{figure/figure7.png} 
+	 \caption{Maintenant il y a une meilleure similarité en utilisant le paramètre $min\_edges = 3 $. }
+\end{figure}
+Enfin pour une occurrence de test, on calcule le groupe de cette occurrence. Puis pour retrouver l’espèce, on retourne les espèces de ce groupes par fréquences décroissantes dans l’ensemble d’apprentissage.\\Pour les paramètres $min\_edges = 3$, $t = 9 $ et $o = 0$, ce modèle a obtenue une MRR de 0.0326.
+
+
+\subsection{Boosted Trees.}
 \end{document}
 
 

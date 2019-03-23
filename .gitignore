@@ -1,14 +1,20 @@
 #OS_FILE
 
-.DS_Store
-.DS_Store?
+*.DS_Store
+*.DS_Store?
 _*
+*.tex
 *.log
 *.aux
 *.synctex.gz
 *.pyc
+
 #Jeux de données
 
 data
 *tableau_numpy_examplecsv
 GLC2018_Team
+
+#images
+
+Etat_de_l_art/figure
