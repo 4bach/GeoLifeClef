@@ -10,11 +10,11 @@ import pandas as pd
 """
 if __name__ == '__main__':
     print("Vector model tested on train set\n")
-    df = pd.read_csv('example_occurrences.csv', sep=';', header='infer', quotechar='"', low_memory=True)
+    df = pd.read_csv('../../data/occurrences/PL_trusted.csv', sep=';', header='infer', quotechar='"', low_memory=True)
     df = df.dropna(axis=0, how='all')
     df = df.astype({'glc19SpId': 'int64'})
     glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
-                             scnames=df[['glc19SpId','scName']],patches_dir='/local/karmin/env_tensors/PL_trusted'')
+                             scnames=df[['glc19SpId','scName']],patches_dir='/local/karmin/env_tensors/PL_trusted')
 
     
     
