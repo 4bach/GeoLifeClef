@@ -41,7 +41,7 @@ if __name__ == '__main__':
     df = df.dropna(axis=0, how='all')
     df = df.astype({'glc19SpId': 'int64'})
     glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
-                             scnames=df[['glc19SpId','scName']],patches_dir='example_envtensors/0')
+                             scnames=df[['glc19SpId','scName']],patches_dir='example_envtensors')
 
     frequencemodel = FrequenceModel()
 

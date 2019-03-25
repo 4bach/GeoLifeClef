@@ -97,7 +97,6 @@ class Classifier(object):
         return np.mean(scores)
     
     def cross_validation_sklearn(self,dataset,n_folds=5,random=42,test_size=0.1,evaluation_metric='top30'):
-        pass
         if evaluation_metric == 'top30':
             metric = self.top30_score
         elif evaluation_metric == 'mrr':
