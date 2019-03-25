@@ -1,6 +1,7 @@
 from glcdataset import GLCDataset
 import numpy as np
-
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
 class Classifier(object):
 
     """Generic class for a classifier
@@ -10,7 +11,7 @@ class Classifier(object):
         self.train_set = None
         pass
 
-    def fit(self, dataset):
+    def fit(self,dataset):
         """Trains the model on the dataset
            :param dataset: the GLCDataset training set
         """
@@ -94,3 +95,27 @@ class Classifier(object):
             scores.append(metric(test_set))
         print(scores)
         return np.mean(scores)
+    
+    def cross_validation_sklearn(self,dataset,n_folds=5,random=42,test_size=0.1,evaluation_metric='top30'):
+        pass
+        if evaluation_metric == 'top30':
+            metric = self.top30_score
+        elif evaluation_metric == 'mrr':
+            metric = self.mrr_score
+        else:
+            raise Exception("Evaluation metric is not known")
+        
+        
+        for k in range(n_folds):
+            X_train,X_test, y_train, y_test = self.split_train_test(dataset,test_size,random_state=random)
+            self.fit()
+    
+    def split_train_test(self,dataset,test_size=0.2):
+        """
+            Sépare un dataset en données de train & test. 
+            test_size permet de choisir la taille des données de test.
+            retourne : X_train,X_test, y_train, y_test.
+        """
+        return train_test_split(dataset.data, dataset.label, test_size=test_size, random_state=0)
+
+        
