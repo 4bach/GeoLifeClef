@@ -1,20 +1,11 @@
-#OS_FILE
-
-*.DS_Store
-*.DS_Store?
-_*
-*.tex
+.idea/*
+.idea/
 *.log
-*.aux
-*.synctex.gz
+__pychache__/
+*.so
+# environmental tensors saved as numpy format
+*.npy
 *.pyc
-
-#Jeux de données
-
-data
-*tableau_numpy_examplecsv
-GLC2018_Team
-*ex_csv
-#images
-
-Etat_de_l_art/figure
+# notebooks checkpoints
+*.ipynb_checkpoints
+*.DS_Store
