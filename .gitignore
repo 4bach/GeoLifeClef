@@ -3,12 +3,13 @@
 *.DS_Store
 *.DS_Store?
 _*
+Etat_de_l_art/Etat_art_Latex.tex
 *.tex
 *.log
 *.aux
 *.synctex.gz
 *.pyc
-
+nohup.out
 #Jeux de données
 
 data

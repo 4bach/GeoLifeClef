@@ -50,7 +50,10 @@ if __name__ == '__main__':
     print("\nCross validation score: Top30", frequencemodel.cross_validation(glc_dataset, 4, shuffle=False, evaluation_metric='top30'))
     
     # RANDOM
-    
+    randommodel = RandomModel()
+
+    randommodel.fit(glc_dataset)
+    predictions = randommodel.predict(glc_dataset)
     print("Top30 score:",randommodel.top30_score(glc_dataset))
     print("MRR score:", randommodel.mrr_score(glc_dataset))
     print("Cross validation score:", randommodel.cross_validation(glc_dataset, 4, shuffle=False, evaluation_metric='mrr'))

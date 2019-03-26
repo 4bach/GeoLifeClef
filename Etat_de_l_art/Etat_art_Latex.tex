@@ -151,7 +151,26 @@ $ D_{nm} = || \overrightarrow{V}_{nm} ||_{2}$\\
 Ce modèle peut s'apparenter à un k plus proches voisins.
 Le MRR de ce modèle est 0.0271.
 
-\subsection{Modèle de groupe.}
+
+
+
+\subsection{Boosted Trees.}
+L'équipe ST a développé une approche en se basant sur l'usage de XGBoost (Extreme Gradient Boosting). \\
+Avec cette méthode il affirme qu'il est possible de prédire une variable cible basé sur les caractéristiques des données d'apprentissage.\\
+Pour rappel le boosting est une technique utilisée en apprentissage statistique qui a pour but de combiner des classifieurs simple séquentiellement, à quoi on attribue un certain poids, afin d'optimiser les performances de prédiction.\\ Le gradient boosting a pour particularité d'utiliser le gradient de la fonction de perte pour calculer les poids des classifieurs. Les classifieurs ici sont généralement des arbres binaires de décision (CART) de profondeur pas trop grande pour éviter le sur-apprentissage.\\ Il y a un unique paramètre à choisir, qui est la profondeur de l'arbre $max\_depth$.\\
+Ils ont eu plusieurs stratégies pour l'implémentation des Boosted Trees. 
+\subsubsection{Modèle unique.}
+La première stratégie a été de faire un modèle unique pour la prédiction, dans ce cas la variable cible est une liste des probabilités des espèces pour chaque occurrence des données de test.\\
+L'équipe a soumis 3 executions en faisant varié la profondeur de l'arbre et en utilisant l'évaluation MRR.\\
+$max\_depth = 10 $  :  $ Test-score = 0.0085 $\\
+$max\_depth = 3 $    :  $ Test-score = 0.0344 $\\
+$max\_depth = 2 $    :  $ Test-score = 0.0348 $\\
+Comme il est dit précédemment, une faible profondeur de l'arbre évite le sur-apprentissage.
+\subsubsection{Multi-modèles.}
+La seconde stratégie a été de prédire chaque espèce séparément, comme il y avait 3336 espèces, ils ont créé 3336 différents modèles.\\
+In this case the target variable mentioned earlier was a list of probabilities for the occurrence of the current selected single species (one out of 3336) for a dataset occurrence. Each model was evaluated during the training with the log-loss metric because the resulting probabilities were decimal numbers.\\
+\subsubsection{Modèle de groupe.}
+Ensuite la dernière méthode a été d'utiliser des modèles de groupes.\\
 Il est probable que plus d’une espèce apparaissent à un même endroit. Partant de cette idée, ST a proposé un modèle utilisant un groupement d’espèces similaires.\\Pour trouver des similarités, on calcule pour chaque espèce, un vecteur représentatif : à partir des les occurrences de l’espèce dans l’ensemble d’apprentissage, ils ont calculé les valeurs moyennes des 33 variables (sur les 64x64 pixels).\\
 Ensuite ils on calculé la distance entre ces vecteurs (comme pour le modèle vectoriel) ce qui donne une matrice de taille $3336x3336$ dans laquelle la distance entre chaque espèce est stockée. En ignorant les espèces qui ont moins de $o$ occurrences.\\
 Le paramètre $t$ est un seuil indiquant la distance maximum pour que deux espèces appartiennent au même groupe.\\
@@ -169,8 +188,6 @@ Ils ont donc introduit un paramètre $min\_edges$ qui donne le nombre de voisins
 \end{figure}
 Enfin pour une occurrence de test, on calcule le groupe de cette occurrence. Puis pour retrouver l’espèce, on retourne les espèces de ce groupes par fréquences décroissantes dans l’ensemble d’apprentissage.\\Pour les paramètres $min\_edges = 3$, $t = 9 $ et $o = 0$, ce modèle a obtenue une MRR de 0.0326.
 
-
-\subsection{Boosted Trees.}
 \end{document}
 
 
