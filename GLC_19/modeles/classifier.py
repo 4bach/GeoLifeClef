@@ -35,9 +35,9 @@ class Classifier(object):
         mrr = 0.
         for idx,y_predicted in enumerate(predictions):
             try:
-                rank = y_predicted.index(dataset.get_label(idx))
-                mrr += 1./(rank+1)
-            except ValueError: # the actual specie is not predicted
+                rank = np.where(y_predicted==dataset.get_label(dataset.ytest.index[idx]))
+                mrr += 1./(rank[0][0]+1)
+            except IndexError: # the actual specie is not predicted
                 mrr += 0.
         return 1./len(dataset)* mrr
 
@@ -47,10 +47,10 @@ class Classifier(object):
            first answers, and 0 otherwise, over all test test occurences.
         """
         predictions = self.predict(dataset)
-        predictions = [y_predicted[:30] for y_predicted in predictions] # keep 30 first results
+        #predictions = [y_predicted[:30] for y_predicted in predictions] # keep 30 first results
         top30score = 0.
-        for idx,y_predicted in enumerate(predictions):
-            top30score += (dataset.get_label(idx) in y_predicted)
+        for y in range(len(predictions)):
+            top30score += (dataset.get_label(dataset.ytest.index[y]) in predictions[y])
 
         return 1./len(dataset)* top30score
 

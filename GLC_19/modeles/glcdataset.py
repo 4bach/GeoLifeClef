@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+from sklearn.model_selection import train_test_split
 
 #Csv for correspondence between species ids and Taxref names
 TAXANAME_CSV = '../data/occurrences/taxaName_glc19SpId.csv'
@@ -80,17 +81,32 @@ class GLCDataset(Dataset):
         """
         df = pd.read_csv(TAXANAME_CSV, sep=';', quotechar='"')
         return [df[df.glc19SpId == spid]['taxaName'].iloc[0] for spid in list_spids]
+    
+    def split_dataset(self,test_size=0.2,validation=False):
+        """
+            Fonction qui sépare les données en test et apprentissage. 
+            L'option validation permet de déterminer si on attribue une partie du dataset à la validation où non.
+            Retourne un ndarray de train, de test et optionnellement de validation.
+            X_train, X_test, y_train, y_test
+        """
+        self.xtrain,self.xtest,self.ytrain,self.ytest = train_test_split(self.data, self.labels, test_size=test_size, random_state=40)
+        
+        return self.xtrain,self.xtest,self.ytrain,self.ytest
+        """
+            ytrain,ytest sont des types pandas.core.series.Series;   xtrain,xtest sont de type pandas.core.frame.Dataframe
+        """
+        
 
 if __name__ == '__main__':
 
     # Test
-    df = pd.read_csv('example_occurrences.csv', sep=';', header='infer', quotechar='"', low_memory=True)
+    df = pd.read_csv('../example_occurrences.csv', sep=';', header='infer', quotechar='"', low_memory=True)
     df = df[['Longitude','Latitude','glc19SpId','scName']]
 
     df = df.dropna(axis=0, how='all') #drop nan lines
     df = df.astype({'glc19SpId': 'int64'})
     glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
-                             scnames=df[['glc19SpId','scName']],patches_dir='example_envtensors')
+                             scnames=df[['glc19SpId','scName']],patches_dir='../examples/ex_csv/')
 
     print(len(glc_dataset), 'occurrences in the dataset')
     print(len(glc_dataset.labels.unique()), 'number of species\n')

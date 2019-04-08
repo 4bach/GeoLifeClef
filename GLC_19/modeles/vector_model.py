@@ -27,12 +27,12 @@ class VectorModel(Classifier):
          => k-means over groups of species (event. filtered in space or environment), both hard and soft (GMM?)
          => logistic regression, or svm in this new representation space (hybrid clustering/classif)
     """
-    def __init__(self, window_size=4):
+    def __init__(self,dataset,window_size=4,test_size=0.2):
         """
            :param window_size: the size of the pixel window to calculate the
             mean value for each layer of a tensor
         """
-        self.train_vectors = None # vectors for the training dataset
+        dataset.split_dataset(test_size=test_size)
         self.window_size = window_size
 
     def fit(self, dataset):
@@ -41,37 +41,35 @@ class VectorModel(Classifier):
            K being the number of layers in the env. tensor
            :param dataset: the GLCDataset training set
         """
-        self.train_set = dataset
-        self.train_vectors = dataset.tensors_to_vectors(self.window_size)
+        #self.train_set = dataset
+        self.train_vectors = self.tensors_to_vectors(dataset,dataset.xtrain)
 
     def predict(self, dataset, ranking_size=30):
 
         """For each point in the dataset, returns the labels of the 30 closest points in the training set.
            It only keeps the closests training points of different species.
+           Modification de l'algo pour calculer un produit matriciel 
         """
-        predictions = []
-        test_vectors = dataset.tensors_to_vectors(self.window_size)
+        test_vectors = self.tensors_to_vectors(dataset,dataset.xtest)
+        d = scipy.spatial.distance.cdist(test_vectors,self.train_vectors , metric='euclidean')
+        argsort = np.array([np.argsort(d[i])[:ranking_size] for i in range(np.shape(d)[0])])        
+        prediction = np.array([[dataset.ytrain[dataset.ytrain.index[argsort[j][i]]] for i in range(np.shape(argsort)[1])] for j in range(np.shape(argsort)[0])])
+        return prediction
+    
+    def tensors_to_vectors(self,dataset,X):
 
-        for j in range(len(dataset)):
-
-            vector_j = test_vectors[j]
-            # euclidean distances from the test point j to all training points i
-            distances = np.array([scipy.spatial.distance.euclidean(vector_j,vector_i)
-                                  for vector_i in self.train_vectors
-                                 ])
-            # sorts by ascending distance and gives the predicted labels
-            argsort = np.argsort(distances)
-            y_predicted = []
-            labels_found = set() #labels already returned
-            for i in argsort:
-                if len(y_predicted) >= ranking_size:
-                    break
-                y = self.train_set.get_label(i)
-                if not y in labels_found:
-                    y_predicted.append(y)
-                    labels_found.add(y)
-            predictions.append(y_predicted)
-        return predictions
+        """Builds a vector out of a env. tensor for each datapoint
+           :param window_size: the size of the pixel window to calculate the
+            mean value for each layer of a tensor
+           :return: the list of vectors for each datapoint
+        """
+        vectors = np.zeros((len(X),33))
+        i=0
+        for index in X.index:
+            x_c, y_c = 32,32 # (64,64)/2 
+            vectors[i]= np.array([layer[x_c - self.window_size//2: x_c + self.window_size//2,y_c - self.window_size//2: y_c + self.window_size//2].mean() for layer in dataset[index]['patch']])
+            i+=1
+        return vectors
 
 if __name__ == '__main__':
 
@@ -83,13 +81,18 @@ if __name__ == '__main__':
     df = df.astype({'glc19SpId': 'int64'})
     glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
                              scnames=df[['glc19SpId','scName']],patches_dir='../examples/ex_csv/')
-
-    vectormodel = VectorModel(window_size=65)
-
+    
+    vectormodel = VectorModel(glc_dataset,window_size=4)
     vectormodel.fit(glc_dataset)
-    predictions = vectormodel.predict(glc_dataset)
-    scnames = vectormodel.train_set.scnames
-    for idx in range(4):
+    print("Top30 score:",vectormodel.top30_score(glc_dataset))
+    print("MRR score:", vectormodel.mrr_score(glc_dataset))
+    vectormodel = VectorModel(glc_dataset,window_size=10)
+    vectormodel.fit(glc_dataset)
+    print("Top30 score:",vectormodel.top30_score(glc_dataset))
+    print("MRR score:", vectormodel.mrr_score(glc_dataset))
+    
+    
+    """for idx in range(4):
 
         y_predicted = predictions[idx]
         print("Occurrence:", vectormodel.train_set.data.iloc[idx].values)
@@ -101,56 +104,4 @@ if __name__ == '__main__':
 
     print("Top30 score:",vectormodel.top30_score(glc_dataset))
     print("MRR score:", vectormodel.mrr_score(glc_dataset))
-    print("Cross validation score:", vectormodel.cross_validation(glc_dataset, 4, shuffle=False, evaluation_metric='top30'))
-
-class KNNModel(Classifier):
-
-
-    def __init__(self, window_size=4, k=10):
-        """
-           :param window_size: the size of the pixel window to calculate the
-            mean value for each layer of a tensor
-        """
-        self.train_vectors = None # vectors for the training dataset
-        self.window_size = window_size # window size for vector values
-        self.k = k # number of neighbors
-
-    def fit(self, dataset):
-
-        """Builds for each point in the training set a K-dimensional vector,
-           K being the number of layers in the env. tensor
-           :param dataset: the GLCDataset training set
-        """
-        self.train_set = dataset
-        self.train_vectors = dataset.tensors_to_vectors(self.window_size)
-
-    def predict(self, dataset, ranking_size=30):
-
-        """For each point in the dataset, returns the labels of the 30 closest points in the training set,
-           ranked by closest.
-           It only keeps the closests training points of different species.
-        """
-        predictions = []
-        test_vectors = dataset.tensors_to_vectors(self.window_size)
-
-        for j in range(len(dataset)):
-
-            vector_j = test_vectors[j]
-            # euclidean distances from the test point j to all training points i
-            distances = np.array([scipy.spatial.distance.euclidean(vector_j,vector_i)
-                                  for vector_i in self.train_vectors
-                                 ])
-            argsort = np.argsort(distances)[:self.k]
-            # build list of species, along k closest points
-            y_closest = [self.train_set.get_label(idx) for idx in argsort]
-
-            # get unique labels and their counts, then predicts the species:
-            # - first sort the labels by decreasing frequencies
-            # - for labels equal in frequency, then sort by closest to further
-            unique_labels,counts = np.unique(y_closest,return_counts=True)
-            unique_counts, c_counts = np.unique (counts, return_counts=True)
-
-            y_predicted = unique_labels[np.argsort(counts)]
-            predictions.append(y_predicted)
-
-        return predictions
+    print("Cross validation score:", vectormodel.cross_validation(glc_dataset, 4, shuffle=False, evaluation_metric='top30'))"""
