@@ -73,7 +73,7 @@ class VectorModel(Classifier):
         return vectors
     
     
-def run(file_csv,dir_tensor,test_size=0.1):
+def run(file_csv,dir_tensor,test_size=0.2):
     
     
     print("Vector model \n")
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     #dir_tens = '../examples/ex_csv/'
     if len(sys.argv)==3:
     
-        run(sys.argv[1],sys.argv[2],test_size=0.2)
+        run(sys.argv[1],sys.argv[2],test_size=0.1)
     else:
         print("Donnez le fichier csv en premier argument et le dossier des tenseurs en deuxième argument.")
 
