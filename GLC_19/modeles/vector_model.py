@@ -73,7 +73,7 @@ class VectorModel(Classifier):
         return vectors
     
     
-def run(file_csv,dir_tensor,test_size=0.2):
+def run(file_csv,dir_tensor,test_size=0.1):
     
     
     print("Vector model \n")
