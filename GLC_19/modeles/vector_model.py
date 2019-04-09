@@ -2,8 +2,9 @@
 import numpy as np
 import pandas as pd
 from classifier import Classifier
-
+import sys
 import scipy.spatial.distance
+from glcdataset import GLCDataset
 
 class VectorModel(Classifier):
 
@@ -70,18 +71,18 @@ class VectorModel(Classifier):
             vectors[i]= np.array([layer[x_c - self.window_size//2: x_c + self.window_size//2,y_c - self.window_size//2: y_c + self.window_size//2].mean() for layer in dataset[index]['patch']])
             i+=1
         return vectors
-
-if __name__ == '__main__':
-
-    from glcdataset import GLCDataset
-
-    print("Vector model tested on train set\n")
-    df = pd.read_csv('../example_occurrences.csv', sep=';', header='infer', quotechar='"', low_memory=True)
+    
+    
+def run(file_csv,dir_tensor,test_size=0.2):
+    
+    
+    print("Vector model \n")
+    df = pd.read_csv(file_csv, sep=';', header='infer', quotechar='"', low_memory=True)
     df = df.dropna(axis=0, how='all')
     df = df.astype({'glc19SpId': 'int64'})
     glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
-                             scnames=df[['glc19SpId','scName']],patches_dir='../examples/ex_csv/')
-    
+                             scnames=df[['glc19SpId','scName']],patches_dir=dir_tensor)
+
     vectormodel = VectorModel(glc_dataset,window_size=4)
     vectormodel.fit(glc_dataset)
     print("Top30 score:",vectormodel.top30_score(glc_dataset))
@@ -91,17 +92,13 @@ if __name__ == '__main__':
     print("Top30 score:",vectormodel.top30_score(glc_dataset))
     print("MRR score:", vectormodel.mrr_score(glc_dataset))
     
+if __name__ == '__main__':
+    #examplecsv = '../example_occurrences.csv'
+    #dir_tens = '../examples/ex_csv/'
+    if len(sys.argv)==3:
     
-    """for idx in range(4):
+        run(sys.argv[1],sys.argv[2],test_size=0.2)
+    else:
+        print("Donnez le fichier csv en premier argument et le dossier des tenseurs en deuxième argument.")
 
-        y_predicted = predictions[idx]
-        print("Occurrence:", vectormodel.train_set.data.iloc[idx].values)
-        print("Observed specie:", scnames.iloc[idx]['scName'])
-        print("Predicted species, ranked:")
-
-        print([scnames[scnames.glc19SpId == y]['scName'].iloc[0] for y in y_predicted[:10]])
-        print('\n')
-
-    print("Top30 score:",vectormodel.top30_score(glc_dataset))
-    print("MRR score:", vectormodel.mrr_score(glc_dataset))
-    print("Cross validation score:", vectormodel.cross_validation(glc_dataset, 4, shuffle=False, evaluation_metric='top30'))"""
+   
