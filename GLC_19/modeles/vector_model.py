@@ -99,6 +99,7 @@ if __name__ == '__main__':
     
         run(sys.argv[1],sys.argv[2],test_size=0.1)
     else:
-        print("Donnez le fichier csv en premier argument et le dossier des tenseurs en deuxième argument.")
+        run('../example_occurrences.csv','../examples/ex_csv/',test_size=0.1)
+        #print("Donnez le fichier csv en premier argument et le dossier des tenseurs en deuxième argument.")
 
    
