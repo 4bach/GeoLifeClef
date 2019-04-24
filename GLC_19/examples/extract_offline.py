@@ -6,7 +6,11 @@ import numpy as np
 
 from environmental_raster_glc import PatchExtractor, raster_metadata
 
+# This script exports the patches on disk, in command line mode
+# See the readme for how to use
+
 if __name__ == '__main__':
+    """Exports the patches on disk"""
 
     import argparse
 
@@ -22,11 +26,15 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    df = pd.read_csv(args.dataset, sep=';', header='infer', quotechar='"', low_memory=False)
+    # Reads the csv file containing the occurences
+
+    df = pd.read_csv(args.dataset, sep=';', header='infer', quotechar='"', low_memory=True)
     df = df.dropna(axis=0, how='all')
 
+    ## MODIFIED : Now all the files are saved in the same directory and their
+    ## names are just the index of the row in the dataframe.
+
     batch_size = 10000  # number of patch to extract simultaneously
-    modulo_disk = 1024  # number of patch per folder
     # testing destination directory
     if not os.path.isdir(args.destination):
         os.mkdir(args.destination)
@@ -34,12 +42,13 @@ if __name__ == '__main__':
     ext = PatchExtractor(args.rasters, size=args.size, verbose=True)
 
     positions = []
+    # exception = ('proxi_eau_fast','alti', 'clc') # add rasters that don't fit into memory
+    exception = tuple()
+    # testing destination directory
+    if not os.path.isdir(args.destination):
+        os.mkdir(args.destination)
 
-    # exception = ('proxi_eau_fast',)
-    exception = tuple()  # add rasters that don't fit into memory
-
-    export_count = 0
-
+    export_idx = 0
     for idx, occurrence in enumerate(df.iterrows()):
         # adding an occurrence latitude and longitude
         positions.append((occurrence[1].Latitude, occurrence[1].Longitude))
@@ -60,14 +69,10 @@ if __name__ == '__main__':
             # the shape of variables is (batch_size, nb_rasters, size, size)
 
             for p_idx in range(variables.shape[0]):
-                folder = str(export_count // batch_size)
-                # testing destination directory
-                if not os.path.isdir(args.destination + '/' + folder):
-                    os.mkdir(args.destination + '/' + folder)
-                np.save(args.destination + '/' + folder + '/' + str(export_count % modulo_disk), variables[p_idx])
 
-                export_count += 1
+                np.save(args.destination + '/' + str(export_idx), variables[p_idx])
 
+                export_idx += 1
             # resetting positions for new batch
             positions = []
     print('done!')
