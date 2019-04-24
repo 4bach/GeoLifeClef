@@ -31,7 +31,8 @@ class Kmeans(Classifier):
     def tensors_to_vectors(self, dataset, X):
 
         """Builds a vector out of a env. tensor for each datapoint
-          
+            On a besoin de dataset pour prendre les bons patchs.
+           X -> soit dataset.train soit dataset.test 
            :return: the list of vectors for each datapoint
         """
         vectors = np.zeros((len(X),33))
