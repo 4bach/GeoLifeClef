@@ -47,7 +47,7 @@ if __name__ == '__main__':
         y_predicted = predictions[idx]
         print("Occurrence:", randommodel.train_set.data.iloc[idx].values)
         print("Observed specie:", scnames.iloc[idx]['scName'])
-        print("Predicted species, ranked:")
+        print("Predicted species:")
 
         print([scnames[scnames.glc19SpId == y]['scName'].iloc[0] for y in y_predicted[:10]])
         print('\n')

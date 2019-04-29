@@ -7,15 +7,15 @@ class FrequenceModel(Classifier):
     """Simple vector model based on nearest-neighbors in the environmental
        space
     """
-    def __init__(self, window_size=4):
+    def __init__(self):
         """
            :param window_size: the size of the pixel window to calculate the
             mean value for each layer of a tensor
         """
-         # species ranked from most to least common in the training set
+        # species ranked from most to least common in the training set
         self.all_labels_by_frequency = None
 
-    def fit(self, dataset):
+    def fit(self, X):
 
         self.train_set = dataset
         all_labels, counts = np.unique(dataset.labels.values, return_counts=True)
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     df = df.dropna(axis=0, how='all')
     df = df.astype({'glc19SpId': 'int64'})
     glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
-                             scnames=df[['glc19SpId','scName']],patches_dir='example_envtensors/0')
+                             scnames=df[['glc19SpId','scName']],patches_dir='example_envtensors')
 
     frequencemodel = FrequenceModel()
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         y_predicted = predictions[idx]
         print("Occurrence:", frequencemodel.train_set.data.iloc[idx].values)
         print("Observed specie:", scnames.iloc[idx]['scName'])
-        print("Predicted species, ranked:")
+        print("Predicted species:")
 
         print([scnames[scnames.glc19SpId == y]['scName'].iloc[0] for y in y_predicted[:10]])
         print('\n')
