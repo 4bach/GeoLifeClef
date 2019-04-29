@@ -7,6 +7,7 @@ from classifier import Classifier
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.metrics import pairwise_distances
 
+# TODO : RETURN PROBABILITIES IN PREDICT
 class VectorModel(Classifier):
 
     """Simple vector model based on nearest-neighbors in the vector space.
@@ -49,7 +50,7 @@ class VectorModel(Classifier):
         self.y_ = y
         return self
 
-    def predict(self, X):
+    def predict(self, X, with_proba=False):
 
         # check is fit had been called
         check_is_fitted(self, ['X_', 'y_'])
@@ -77,14 +78,13 @@ class VectorModel(Classifier):
                   y_found.add(y)
 
             y_predicted.append(y_pred)
-            # THIS DOESN'T WORK: don't know why it return duplicates
-            # y_pred = self.y_[np.sort(y_indexes)][:self.ranking_size]
         return y_predicted
 
 if __name__ == '__main__':
 
     from sklearn.model_selection import train_test_split
     from glcdataset import build_environmental_data
+    from sklearn.preprocessing import StandardScaler
 
     # for reproducibility
     np.random.seed(42)
@@ -104,12 +104,17 @@ if __name__ == '__main__':
     env_df = build_environmental_data(df[['Latitude','Longitude']],patches_dir='example_envtensors')
     X = env_df.values
     y = target_df.values
+    # Standardize the features by removing the mean and scaling to unit variance
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
 
-    # Evaluate as the average accuracy on two train/split random sample:
-    print("Test vector model, euclidean metric")
+    # Evaluate as the average accuracy on one train/split random sample:
+    print("Test vector model")
     X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2)
     classifier = VectorModel(metric='euclidean')
     classifier.fit(X_train,y_train)
     y_predicted = classifier.predict(X_test)
     print(f'Top30 score:{classifier.top30_score(y_predicted, y_test)}')
     print(f'MRR score:{classifier.mrr_score(y_predicted, y_test)}')
+    print('Params:',classifier.get_params())
+
