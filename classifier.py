@@ -4,6 +4,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 
 # Scikit-learn validation tools
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+# from sklearn.utils.multiclass import unique_labels
 
 class Classifier(BaseEstimator, ClassifierMixin):
 
@@ -38,7 +39,7 @@ class Classifier(BaseEstimator, ClassifierMixin):
         self.classes_ = self.clf.classes_
         return self
 
-    def predict(self, X, *args, **kwargs):
+    def predict(self, X, return_proba=False, *args, **kwargs):
         """Predict the list of labels most likely to be observed
            for the data points given
         """
@@ -54,9 +55,15 @@ class Classifier(BaseEstimator, ClassifierMixin):
         # predict probabilities for each label
         probas = self.clf.predict_proba(X)
         # get the indexes of the sorted probabilities, in decreasing order
-        top_predictions = np.argsort(probas, axis=1)[:,-self.ranking_size:]
-        # get the names of the classes from the indexes
+        top_predictions = np.flip(np.argsort(probas, axis=1)[:,-self.ranking_size:],axis=1)
+
+        # get the names of the classes predicted
         y_predicted = self.classes_[top_predictions]
+        if return_proba:
+            # get as well the probabilities of the predictions
+            y_predicted_probas = [probas[i][pred] for i,pred in enumerate(top_predictions)]
+            return np.array(y_predicted), np.array(y_predicted_probas)
+
         return np.array(y_predicted)
 
     def mrr_score(self, y_pred, y_true):
