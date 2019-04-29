@@ -178,7 +178,7 @@ if __name__ == '__main__':
     target_df = df['glc19SpId']
     # correspondence table between ids and the species taxonomic names
     # (Taxref names with year of discoverie)
-    taxonomic_names = pd.read_csv('../data/occurrences/taxaName_glc19SpId.csv',
+    taxonomic_names = pd.read_csv('~dev/geolifeclef/GLC19/data/occurrences/taxaName_glc19SpId.csv',
                                   sep=';',header='infer', quotechar='"',low_memory=True)
 
     # glc_dataset = GLCDataset(df[['Longitude','Latitude']], df['glc19SpId'],
