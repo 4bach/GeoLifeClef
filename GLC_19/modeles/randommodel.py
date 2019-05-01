@@ -14,15 +14,19 @@ class RandomModel(Classifier):
         dataset.split_dataset(test_size=test_size)
 
     def fit(self, dataset):
-
-        self.all_labels = pd.Series(dataset.ytrain.unique())
+        """
+            dataset -> train
+        """
+        self.all_labels = pd.Series(dataset.labels.unique())
         
         
         
     def predict(self, dataset, ranking_size=30):
-
+        """
+            dataset -> test
+        """
         
-        predictions = np.array([np.random.choice(self.all_labels.values, size=ranking_size) for j in range(len(dataset.ytest))])
+        predictions = np.array([np.random.choice(self.all_labels.values, size=ranking_size) for j in range(len(dataset.data))])
 
         return predictions
 

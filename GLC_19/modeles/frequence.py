@@ -12,20 +12,20 @@ class FrequenceModel(Classifier):
     """
     def __init__(self, dataset,test_size=0.2):
         
-        dataset.split_dataset(test_size=test_size)
+        #dataset.split_dataset(test_size=test_size)
          # species ranked from most to least common in the training set
         self.all_labels_by_frequency = None
 
     def fit(self, dataset):
 
-        self.train_frequency=dataset.ytrain.value_counts(normalize=False, sort=True, ascending=False)
+        self.train_frequency=dataset.labels.value_counts(normalize=False, sort=True, ascending=False)
         
     def predict(self, dataset, ranking_size=30):
 
         """
             Allways the same array is return
         """
-        predictions = np.array([[self.train_frequency.index[i] for i in range(ranking_size)] for j in range(len(dataset.ytest))])
+        predictions = np.array([[self.train_frequency.index[i] for i in range(ranking_size)] for j in range(len(dataset.labels))])
        
         """
             À optimiser, je crée une matrice de predictions de la taille de test, mais on pourrait juste garder un vecteur
