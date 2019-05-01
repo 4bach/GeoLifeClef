@@ -11,7 +11,7 @@ Etat_de_l_art/Etat_art_Latex.tex
 *.pyc
 nohup.out
 #Jeux de données
-
+GLC_19/examples/ex_csv*/
 data
 *tableau_numpy_examplecsv
 GLC2018_Team
