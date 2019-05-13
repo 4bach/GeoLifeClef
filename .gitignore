@@ -1,21 +1,14 @@
-#OS_FILE
-
-*.DS_Store
-*.DS_Store?
-_*
-Etat_de_l_art/Etat_art_Latex.tex
-*.tex
+.idea/
 *.log
-*.aux
-*.synctex.gz
+**/__pycache__
+# environmental tensors saved as numpy format
+*.npy
 *.pyc
-nohup.out
-#Jeux de données
-GLC_19/examples/ex_csv*/
-data
-*tableau_numpy_examplecsv
-GLC2018_Team
-*ex_csv
-#images
-
-Etat_de_l_art/figure
+# notebooks checkpoints
+.ipynb_checkpoints/
+.DS_Store
+# datafiles and serialized models
+data/
+!data/trunc/
+models/experiments/*.pkl
+maximiliense/patch.jpg
