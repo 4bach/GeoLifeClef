@@ -1,0 +1,22 @@
+MODELES;FICHIER;SCORE_TOP_30;SCORE_MRR;PP_DROPED_COLUMNS;PP_SCALED;PP_PCA;HYPER_PARAMETRES_MODEL
+random_model;PL_trusted;0,046;0,00603;clc;True;True;None
+frequence_model;PL_trusted;0,297;0,0647;clc;True;True;None
+vector_model;PL_trusted;0,246;0,0572;clc;True;True;{metric:’euclidean’ }
+vector_model;PL_trusted;0,238;0,0568;clc;True;True;{metric:’cosin’}
+discriminant_analysis_model;PL_trusted;0,340;0,0638;clc;True;True;{'reg_param': 0.9621588587209853, 'shrinkage': 'auto', 'solver': 'lsqr', 'type': 'lda'}
+extra_trees_model;PL_trusted;0,365;0,0879;clc;True;True;{'bootstrap': False, 'criterion': 'gini', 'max_depth': 5, 'max_features': 'auto', 'min_impurity_decrease': 0.0, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'n_estimators': 150, 'ranking_size': 30, 'verbose': None, 'warm_start': False}
+knn_model;PL_trusted;0,394;0,08739;clc;True;True;{'lmnn': None, 'metric': 'euclidean', 'n_neighbors': 400, 'p': None, 'ranking_size': 30, 'weights': 'distance'}
+logistic_model;PL_trusted_2500;0,311;0,06645;;False;False;{'C': None, 'class_weight': None, 'intercept_scaling': None, 'max_iter': None, 'multi_class': None, 'penalty': None, 'ranking_size': 30, 'solver': None, 'verbose': None, 'warm_start': None}
+mlp_model;PL_trusted_2500;0,32;0,06618;;False;False;{'activation': 'relu', 'alpha': 0.001, 'batch_size': ('auto',), 'beta_1': 0.9, 'beta_2': 0.999, 'early_stopping': True, 'epsilon': 1e-08, 'hidden_layer_sizes': (50,), 'learning_rate': 'adaptive', 'learning_rate_init': 0.001, 'max_iter': 200, 'n_iter_no_change': 10, 'ranking_size': 30, 'shuffle': True, 'solver': 'adam', 'tol': 0.0001, 'validation_fraction': 0.1, 'verbose': False}
+naives_bayes_model;PL_trusted;0,270;0,04014;clc;True;True;{'var_smoothing': 1e-09}
+nearest_centroid_model;PL_trusted;0,154;0,0229;clc;True;True;{'metric': 'euclidean', 'ranking_size': 30, 'shrink_threshold': 0.9}
+radius_neighbors_model;PL_trusted_2500;0,194;0,028;;True;False;{'metric': 'euclidean', 'p': 2, 'radius': 5.0, 'ranking_size': 30, 'weights': 'uniform'}
+random_forest_model;PL_trusted;0,375;0,0919;clc;True;True;{'bootstrap': False, 'class_weight': None, 'criterion': 'gini', 'max_depth': 5, 'max_features': 'auto', 'min_impurity_decrease': 0.0, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'n_estimators': 150, 'ranking_size': 30, 'verbose': None, 'warm_start': False}
+sgd_model;PL_trusted_2500;0,34;0,05011;;True;False;{'alpha': 0.0001, 'average': False, 'class_weight': None, 'early_stopping': False, 'epsilon': 0.1, 'eta0': 0.0, 'l1_ratio': 0.15, 'learning_rate': 'optimal', 'loss': 'log', 'max_iter': 200, 'n_iter_no_change': 5, 'penalty': 'l2', 'power_t': 0.5, 'ranking_size': 30, 'shuffle': True, 'validation_fraction': 0.1, 'verbose': 0, 'warm_start': False}
+svm_model;PL_trusted_2500;0,349;0,0748;;True;False;{'C': 1.0, 'coef0': 0.0, 'degree': 3, 'gamma': 'scale', 'kernel': 'linear', 'ranking_size': 30, 'shrinking': True}
+xg_boost_model;PL_trusted_2500;0,365;0,08798;;True;False;{'bootstrap': False, 'criterion': 'gini', 'max_depth': 5, 'max_features': 'auto', 'min_impurity_decrease': 0.0, 'min_samples_split': 2, 'min_weight_fraction_leaf': 0.0, 'n_estimators': 150, 'ranking_size': 30, 'verbose': None, 'warm_start': False}
+;;;;;;;
+;;;;;;;
+;;;;;;;
+;;;;;;;
+;;;;;;;
